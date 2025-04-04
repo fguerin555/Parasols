@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/parasols/static/css/main.f855e6bc.css",
-    "main.js": "/parasols/static/js/main.6508816e.js",
-    "static/js/453.3a7d60ba.chunk.js": "/parasols/static/js/453.3a7d60ba.chunk.js",
-    "static/media/logo.svg": "/parasols/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/parasols/index.html",
-    "main.f855e6bc.css.map": "/parasols/static/css/main.f855e6bc.css.map",
-    "main.6508816e.js.map": "/parasols/static/js/main.6508816e.js.map",
-    "453.3a7d60ba.chunk.js.map": "/parasols/static/js/453.3a7d60ba.chunk.js.map"
+    "main.css": "/Parasols/static/css/main.f855e6bc.css",
+    "main.js": "/Parasols/static/js/main.a6f5a386.js",
+    "static/js/453.3a7d60ba.chunk.js": "/Parasols/static/js/453.3a7d60ba.chunk.js",
+    "static/media/logo.svg": "/Parasols/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/Parasols/index.html",
+    "main.f855e6bc.css.map": "/Parasols/static/css/main.f855e6bc.css.map",
+    "main.a6f5a386.js.map": "/Parasols/static/js/main.a6f5a386.js.map",
+    "453.3a7d60ba.chunk.js.map": "/Parasols/static/js/453.3a7d60ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.f855e6bc.css",
-    "static/js/main.6508816e.js"
+    "static/js/main.a6f5a386.js"
   ]
 }
