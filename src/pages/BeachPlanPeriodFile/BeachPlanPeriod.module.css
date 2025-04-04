@@ -1,0 +1,17 @@
+.BeachPlanPeriodPage {
+  width: 100%;
+}
+
+.Titre h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  color: Orange;
+}
+
+@media (max-width: 1224px) {
+  .h1 {
+    font-size: 20px;
+  }
+}
