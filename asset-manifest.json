@@ -1,16 +1,24 @@
 {
   "files": {
-    "main.css": "/Parasols/static/css/main.f855e6bc.css",
-    "main.js": "/Parasols/static/js/main.a6f5a386.js",
-    "static/js/453.3a7d60ba.chunk.js": "/Parasols/static/js/453.3a7d60ba.chunk.js",
-    "static/media/logo.svg": "/Parasols/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/Parasols/static/css/main.4365a76b.css",
+    "main.js": "/Parasols/static/js/main.cff6367f.js",
+    "static/media/Montserrat-LightItalic.ttf": "/Parasols/static/media/Montserrat-LightItalic.ac3843da62f0afac7929.ttf",
+    "static/media/Montserrat-MediumItalic.ttf": "/Parasols/static/media/Montserrat-MediumItalic.67e6dda3939a21720991.ttf",
+    "static/media/Montserrat-ExtraLightItalic.ttf": "/Parasols/static/media/Montserrat-ExtraLightItalic.8df5777e3ea85687bdf0.ttf",
+    "static/media/Montserrat-ThinItalic.ttf": "/Parasols/static/media/Montserrat-ThinItalic.c9656dd4aed2ca4f5b1d.ttf",
+    "static/media/Montserrat-Medium.ttf": "/Parasols/static/media/Montserrat-Medium.b8c6753baa964ccac1ba.ttf",
+    "static/media/Montserrat-Light.ttf": "/Parasols/static/media/Montserrat-Light.7179b7d2ac9b599db5f9.ttf",
+    "static/media/Montserrat-Regular.ttf": "/Parasols/static/media/Montserrat-Regular.24785cc015b27a3e964b.ttf",
+    "static/media/Montserrat-ExtraLight.ttf": "/Parasols/static/media/Montserrat-ExtraLight.d928d1131a9af02cb672.ttf",
+    "static/media/Montserrat-Thin.ttf": "/Parasols/static/media/Montserrat-Thin.9a7aece9cfe235bc0920.ttf",
+    "static/media/source-sans-pro.regular.ttf": "/Parasols/static/media/source-sans-pro.regular.358e8828cd2fc97c7e74.ttf",
+    "static/media/JosefinSans-Medium.ttf": "/Parasols/static/media/JosefinSans-Medium.45a5738c27c1bbbecc0c.ttf",
     "index.html": "/Parasols/index.html",
-    "main.f855e6bc.css.map": "/Parasols/static/css/main.f855e6bc.css.map",
-    "main.a6f5a386.js.map": "/Parasols/static/js/main.a6f5a386.js.map",
-    "453.3a7d60ba.chunk.js.map": "/Parasols/static/js/453.3a7d60ba.chunk.js.map"
+    "main.4365a76b.css.map": "/Parasols/static/css/main.4365a76b.css.map",
+    "main.cff6367f.js.map": "/Parasols/static/js/main.cff6367f.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.a6f5a386.js"
+    "static/css/main.4365a76b.css",
+    "static/js/main.cff6367f.js"
   ]
 }
