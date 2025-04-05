@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./Global.css";
-import Beach from "./pages/BeachFile/Beach";
-import Period from "./pages/PeriodFile/Period";
+import Booking from "./pages/BookingFile/Booking";
+
 import DaybyDay from "./pages/DaybyDayFile/DaybyDay";
 import CodBarreReader from "./pages/CodBarreReaderFile/CodBarreReader";
 import BeachPlanPeriod from "./pages/BeachPlanPeriodFile/BeachPlanPeriod";
@@ -16,9 +16,9 @@ const App = () => {
       <div>
         <Navbar />
         <Routes>
-          <Route path="/Parasols" element={<Beach />} />
-          <Route path="/" element={<Beach />} />
-          <Route path="/period" element={<Period />} />
+          <Route path="/Parasols" element={<Booking />} />
+          <Route path="/" element={<Booking />} />
+
           <Route path="/daybyday" element={<DaybyDay />} />
           <Route path="/codbarrereader" element={<CodBarreReader />} />
           <Route path="/beachplanperiod" element={<BeachPlanPeriod />} />

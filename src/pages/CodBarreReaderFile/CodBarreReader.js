@@ -8,7 +8,7 @@ const CodBarreReader = () => {
     <div>
       <div className={styles.CodeBarreReaderPage}>
         <div className={styles.Titre}>
-          <h1>Cod Barre Reader Page</h1>
+          <h1>Cod Barre Reader App</h1>
         </div>
       </div>
     </div>
