@@ -18,6 +18,9 @@ const Navbar = () => {
           <Link to="/beachplanperiod">Beach Plan Period</Link>
         </li>
         <li>
+          <Link to="ReservationList">Lista Prenotazione</Link>
+        </li>
+        <li>
           <Link to="/codbarrereader">Code barre Reader</Link>
         </li>
       </ul>

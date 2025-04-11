@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./Global.css";
 import Booking from "./pages/BookingFile/Booking";
-
+import ReservationList from "./pages/ReservationListFile/ReservationList";
 import DaybyDay from "./pages/DaybyDayFile/DaybyDay";
 import CodBarreReader from "./pages/CodBarreReaderFile/CodBarreReader";
 import BeachPlanPeriod from "./pages/BeachPlanPeriodFile/BeachPlanPeriod";
@@ -18,6 +18,7 @@ const App = () => {
         <Routes>
           <Route path="/Parasols" element={<Booking />} />
           <Route path="/" element={<Booking />} />
+          <Route path="/ReservationList" element={<ReservationList />} />
 
           <Route path="/daybyday" element={<DaybyDay />} />
           <Route path="/codbarrereader" element={<CodBarreReader />} />

@@ -59,11 +59,6 @@
   width: 100%;
   gap: 8px;
 }
-/* .WholeMorningAfternoon h6 {
-  margin: 15px 0 5px 0;
-  font-family: "Montserrat-Medium", Arial, Helvetica, sans-serif;
-  font-size: 20px;
-} */
 
 .WholeMorningAfternoon p {
   margin: 0;
@@ -81,6 +76,36 @@
   font-size: 20px;
   padding: 0;
 }
+
+.OmbrelloSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.OmbrelloSection p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Montserrat-Medium", Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+
+.OmbrelloInputs {
+  display: flex;
+  gap: 10px; /* Ajoute 5px d'espacement entre les inputs */
+}
+
+.OmbrelloSection input {
+  width: 60px;
+  height: 30px;
+  text-align: center !important;
+  border: 1px solid blue;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 0;
+}
+
 @media (max-width: 600px) {
   .WholeMorningAfternoon p {
     font-size: 18px;
