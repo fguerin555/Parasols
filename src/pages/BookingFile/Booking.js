@@ -4,6 +4,12 @@ import { collection, addDoc } from "firebase/firestore";
 import "../../Global.css";
 import styles from "./Booking.module.css";
 
+// Ajoutez cette fonction au début du composant pour capitaliser
+const capitalize = (str) => {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+};
+
 const Booking = () => {
   // États pour les champs du formulaire
   const [formData, setFormData] = useState({
@@ -11,17 +17,53 @@ const Booking = () => {
     nome: "",
     email: "",
     telefono: "",
-    primoGiorno: "",
-    ultimoGiorno: "",
+    primoGiorno: new Date().toISOString().split("T")[0], // Date du jour
+    ultimoGiorno: new Date().toISOString().split("T")[0], // Date du jour
     timeday: "",
     numeroOmbrello1: "",
     numeroOmbrello2: "",
     numeroOmbrello3: "",
+    lettiOmbrello1: "2", // Valeur par défaut
+    lettiOmbrello2: "2",
+    lettiOmbrello3: "2",
   });
 
   // Gestion des changements dans les inputs
   const handleChange = (e) => {
     const { id, value } = e.target;
+
+    // Gestion spéciale pour Cognome et Nome
+    if (id === "cognome" || id === "nome") {
+      setFormData((prev) => ({
+        ...prev,
+        [id]: capitalize(value),
+      }));
+      return;
+    }
+
+    // Gestion spéciale pour les dates
+    if (id === "primoGiorno") {
+      setFormData((prev) => ({
+        ...prev,
+        primoGiorno: value,
+        ultimoGiorno: prev.ultimoGiorno < value ? value : prev.ultimoGiorno,
+      }));
+      return;
+    }
+
+    if (id === "ultimoGiorno") {
+      if (value < formData.primoGiorno) {
+        alert("La date de fin ne peut pas être antérieure à la date de début");
+        return;
+      }
+      setFormData((prev) => ({
+        ...prev,
+        ultimoGiorno: value,
+      }));
+      return;
+    }
+
+    // Gestion par défaut pour les autres champs
     setFormData((prev) => ({
       ...prev,
       [id]: value,
@@ -58,6 +100,18 @@ const Booking = () => {
     }));
   };
 
+  // Ajoutez une fonction pour gérer les changements des lits
+  const handleLettiChange = (e) => {
+    const { id, value } = e.target;
+    const numValue = parseInt(value, 10);
+    if (numValue >= 2 && numValue <= 3) {
+      setFormData((prev) => ({
+        ...prev,
+        [id]: value,
+      }));
+    }
+  };
+
   // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,6 +142,13 @@ const Booking = () => {
         numeroOmbrello1: formData.numeroOmbrello1,
         numeroOmbrello2: formData.numeroOmbrello2 || null,
         numeroOmbrello3: formData.numeroOmbrello3 || null,
+        lettiOmbrello1: formData.lettiOmbrello1,
+        lettiOmbrello2: formData.numeroOmbrello2
+          ? formData.lettiOmbrello2
+          : null,
+        lettiOmbrello3: formData.numeroOmbrello3
+          ? formData.lettiOmbrello3
+          : null,
         // Champs optionnels
         email: formData.email || null,
         telefono: formData.telefono || null,
@@ -104,12 +165,15 @@ const Booking = () => {
         nome: "",
         email: "",
         telefono: "",
-        primoGiorno: "",
-        ultimoGiorno: "",
+        primoGiorno: new Date().toISOString().split("T")[0],
+        ultimoGiorno: new Date().toISOString().split("T")[0],
         timeday: "",
         numeroOmbrello1: "",
         numeroOmbrello2: "",
         numeroOmbrello3: "",
+        lettiOmbrello1: "2",
+        lettiOmbrello2: "2",
+        lettiOmbrello3: "2",
       });
     } catch (error) {
       console.error("Erreur lors de la création:", error);
@@ -182,7 +246,8 @@ const Booking = () => {
           </div>
 
           <div className={styles.WholeMorningAfternoon}>
-            <p>Giorno Intero : "I" / Mattina : "M" / Pomerrigio "P"</p>
+            <p>Giorno Intero : "I"</p>
+            <p>Mattina : "M" / Pomerrigio "P"</p>
             <input
               type="text"
               maxLength="1"
@@ -195,35 +260,77 @@ const Booking = () => {
           </div>
           <div className={styles.OmbrelloSection}>
             <p>Numeri Ombrelli : </p>
-            <p>(A1-A36, B1-B36, C1-C36, D1-D36)</p>
+            <p>A1-A36, B1-B36, C1-C36, D1-D36</p>
             <div className={styles.OmbrelloInputs}>
-              <input
-                type="text"
-                id="numeroOmbrello1"
-                placeholder="A1"
-                maxLength="3"
-                style={{ textTransform: "uppercase" }}
-                value={formData.numeroOmbrello1}
-                onChange={handleOmbrelloChange}
-              />
-              <input
-                type="text"
-                id="numeroOmbrello2"
-                placeholder="B1"
-                maxLength="3"
-                style={{ textTransform: "uppercase" }}
-                value={formData.numeroOmbrello2}
-                onChange={handleOmbrelloChange}
-              />
-              <input
-                type="text"
-                id="numeroOmbrello3"
-                placeholder="C1"
-                maxLength="3"
-                style={{ textTransform: "uppercase" }}
-                value={formData.numeroOmbrello3}
-                onChange={handleOmbrelloChange}
-              />
+              <div className={styles.ombrelloGroup}>
+                <input
+                  type="text"
+                  id="numeroOmbrello1"
+                  placeholder="A1"
+                  maxLength="3"
+                  style={{ textTransform: "uppercase" }}
+                  value={formData.numeroOmbrello1}
+                  onChange={handleOmbrelloChange}
+                />
+              </div>
+              <div className={styles.ombrelloGroup}>
+                <input
+                  type="text"
+                  id="numeroOmbrello2"
+                  placeholder="B1"
+                  maxLength="3"
+                  style={{ textTransform: "uppercase" }}
+                  value={formData.numeroOmbrello2}
+                  onChange={handleOmbrelloChange}
+                />
+              </div>
+              <div className={styles.ombrelloGroup}>
+                <input
+                  type="text"
+                  id="numeroOmbrello3"
+                  placeholder="C1"
+                  maxLength="3"
+                  style={{ textTransform: "uppercase" }}
+                  value={formData.numeroOmbrello3}
+                  onChange={handleOmbrelloChange}
+                />
+              </div>
+            </div>
+            <p className={styles.lettiniTitle}>Lettini</p>
+            <div className={styles.OmbrelloInputs}>
+              <div className={styles.ombrelloGroup}>
+                <input
+                  type="number"
+                  id="lettiOmbrello1"
+                  min="2"
+                  max="3"
+                  value={formData.lettiOmbrello1}
+                  onChange={handleLettiChange}
+                  placeholder="2-3"
+                />
+              </div>
+              <div className={styles.ombrelloGroup}>
+                <input
+                  type="number"
+                  id="lettiOmbrello2"
+                  min="2"
+                  max="3"
+                  value={formData.lettiOmbrello2}
+                  onChange={handleLettiChange}
+                  placeholder="2-3"
+                />
+              </div>
+              <div className={styles.ombrelloGroup}>
+                <input
+                  type="number"
+                  id="lettiOmbrello3"
+                  min="2"
+                  max="3"
+                  value={formData.lettiOmbrello3}
+                  onChange={handleLettiChange}
+                  placeholder="2-3"
+                />
+              </div>
             </div>
           </div>
 

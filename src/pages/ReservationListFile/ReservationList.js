@@ -5,6 +5,7 @@ import styles from "./ReservationList.module.css";
 
 const ReservationList = () => {
   const [reservations, setReservations] = useState([]);
+  const [lettiPerOmbrello, setLettiPerOmbrello] = useState({});
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -27,15 +28,40 @@ const ReservationList = () => {
     fetchReservations();
   }, []);
 
+  const handleLettiChange = (reservationId, ombrelloNum, value) => {
+    const numValue = parseInt(value, 10);
+    if (numValue >= 2 && numValue <= 3) {
+      setLettiPerOmbrello((prev) => ({
+        ...prev,
+        [reservationId]: {
+          ...prev[reservationId],
+          [`ombrello${ombrelloNum}`]: numValue,
+        },
+      }));
+    }
+  };
+
   return (
     <div className={styles.container}>
       <h2>Lista Prenotazione</h2>
       <table className={styles.table}>
         <thead>
           <tr>
-            <th>Ombrello 1</th>
-            <th>Ombrello 2</th>
-            <th>Ombrello 3</th>
+            <th>
+              Ombrello 1
+              <br />
+              <small>Letti (2-3)</small>
+            </th>
+            <th>
+              Ombrello 2
+              <br />
+              <small>Letti (2-3)</small>
+            </th>
+            <th>
+              Ombrello 3
+              <br />
+              <small>Letti (2-3)</small>
+            </th>
             <th>Cognome</th>
             <th>Nome</th>
             <th>Primo Giorno</th>
@@ -48,9 +74,54 @@ const ReservationList = () => {
         <tbody>
           {reservations.map((reservation) => (
             <tr key={reservation.id}>
-              <td>{reservation.numeroOmbrello1}</td>
-              <td>{reservation.numeroOmbrello2}</td>
-              <td>{reservation.numeroOmbrello3}</td>
+              <td>
+                <div className={styles.ombrelloCell}>
+                  <div>{reservation.numeroOmbrello1}</div>
+                  <input
+                    type="number"
+                    min="2"
+                    max="3"
+                    className={styles.lettiInput}
+                    value={lettiPerOmbrello[reservation.id]?.ombrello1 || ""}
+                    onChange={(e) =>
+                      handleLettiChange(reservation.id, 1, e.target.value)
+                    }
+                    placeholder="2-3"
+                  />
+                </div>
+              </td>
+              <td>
+                <div className={styles.ombrelloCell}>
+                  <div>{reservation.numeroOmbrello2}</div>
+                  <input
+                    type="number"
+                    min="2"
+                    max="3"
+                    className={styles.lettiInput}
+                    value={lettiPerOmbrello[reservation.id]?.ombrello2 || ""}
+                    onChange={(e) =>
+                      handleLettiChange(reservation.id, 2, e.target.value)
+                    }
+                    placeholder="2-3"
+                  />
+                </div>
+              </td>
+              <td>
+                <div className={styles.ombrelloCell}>
+                  <div>{reservation.numeroOmbrello3}</div>
+                  <input
+                    type="number"
+                    min="2"
+                    max="3"
+                    className={styles.lettiInput}
+                    value={lettiPerOmbrello[reservation.id]?.ombrello3 || ""}
+                    onChange={(e) =>
+                      handleLettiChange(reservation.id, 3, e.target.value)
+                    }
+                    placeholder="2-3"
+                  />
+                </div>
+              </td>
               <td>{reservation.cognome}</td>
               <td>{reservation.nome}</td>
               <td>{reservation.primoGiorno}</td>

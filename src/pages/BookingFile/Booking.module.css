@@ -12,6 +12,7 @@
   margin-right: 2%;
   margin-left: 2%;
 }
+
 .Names p {
   display: flex;
   flex-direction: column;
@@ -52,12 +53,17 @@
   border: solid 1px blue;
   font-size: 18px;
 }
+.Booking {
+  margin-bottom: 20px; /* Ajout d'une marge en bas de la section date */
+}
+
 .WholeMorningAfternoon {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   gap: 8px;
+  margin-top: 10px; /* Ajout d'une marge en haut de la section I/M/P */
 }
 
 .WholeMorningAfternoon p {
@@ -89,6 +95,14 @@
   align-items: center;
   font-family: "Montserrat-Medium", Arial, Helvetica, sans-serif;
   font-size: 20px;
+  margin-top: 15px;
+}
+
+/* Ajout d'une classe spécifique pour le texte des zones */
+.OmbrelloSection p:nth-child(2) {
+  margin-top: 0; /* Supprime la marge supérieure du deuxième paragraphe */
+  font-size: 18px; /* Réduit légèrement la taille du texte des zones */
+  color: #666; /* Couleur plus claire pour le texte des zones */
 }
 
 .OmbrelloInputs {
@@ -106,8 +120,49 @@
   padding: 0;
 }
 
+.ombrelloGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.ombrelloGroup input[type="number"] {
+  width: 50px;
+  height: 25px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.ombrelloGroup input[type="number"]::-webkit-inner-spin-button,
+.ombrelloGroup input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+}
+
+.ombrelloGroup small {
+  margin: 2px 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.lettiniTitle {
+  margin: 5px 0;
+  color: black;
+  font-size: 14px;
+  font-family: "Montserrat-Medium", Arial, Helvetica, sans-serif;
+  text-align: center;
+  width: 100%;
+}
+
 @media (max-width: 600px) {
   .WholeMorningAfternoon p {
-    font-size: 18px;
+    font-size: 14px;
+  }
+  .OmbrelloSection p {
+    font-size: 14px;
+  }
+  .OmbrelloSection p:nth-child(2) {
+    font-size: 14px; /* Ajout de cette règle */
   }
 }
