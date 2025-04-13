@@ -8,7 +8,7 @@ const BeachPlanAfternoon = () => {
     <div>
       <div className={styles.BeachPlanAfternoonPage}>
         <div className={styles.Titre}>
-          <h1>Beach Plan Afternoon Page</h1>
+          <h1>Beach Plan Afternoon Page 001</h1>
         </div>
       </div>
     </div>
