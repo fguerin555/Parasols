@@ -17,13 +17,13 @@ const Booking = () => {
     nome: "",
     email: "",
     telefono: "",
-    primoGiorno: new Date().toISOString().split("T")[0], // Date du jour
-    ultimoGiorno: new Date().toISOString().split("T")[0], // Date du jour
+    primoGiorno: new Date().toISOString().split("T")[0],
+    ultimoGiorno: new Date().toISOString().split("T")[0],
     timeday: "",
-    numeroOmbrello1: "",
-    numeroOmbrello2: "",
-    numeroOmbrello3: "",
-    lettiOmbrello1: "2", // Valeur par défaut
+    numeroOmbrello1: "", // Vide par défaut
+    numeroOmbrello2: "", // Vide par défaut
+    numeroOmbrello3: "", // Vide par défaut
+    lettiOmbrello1: "2",
     lettiOmbrello2: "2",
     lettiOmbrello3: "2",
   });
@@ -100,11 +100,12 @@ const Booking = () => {
     }));
   };
 
-  // Ajoutez une fonction pour gérer les changements des lits
+  // Remplacez la fonction handleLettiChange existante par celle-ci :
   const handleLettiChange = (e) => {
     const { id, value } = e.target;
-    const numValue = parseInt(value, 10);
-    if (numValue >= 2 && numValue <= 3) {
+
+    // Accepte uniquement les valeurs 2 ou 3
+    if (value === "" || value === "2" || value === "3") {
       setFormData((prev) => ({
         ...prev,
         [id]: value,
@@ -266,7 +267,7 @@ const Booking = () => {
                 <input
                   type="text"
                   id="numeroOmbrello1"
-                  placeholder="A1"
+                  placeholder="" // Placeholder vide
                   maxLength="3"
                   style={{ textTransform: "uppercase" }}
                   value={formData.numeroOmbrello1}
@@ -277,7 +278,7 @@ const Booking = () => {
                 <input
                   type="text"
                   id="numeroOmbrello2"
-                  placeholder="B1"
+                  placeholder="" // Placeholder vide
                   maxLength="3"
                   style={{ textTransform: "uppercase" }}
                   value={formData.numeroOmbrello2}
@@ -288,7 +289,7 @@ const Booking = () => {
                 <input
                   type="text"
                   id="numeroOmbrello3"
-                  placeholder="C1"
+                  placeholder="" // Placeholder vide
                   maxLength="3"
                   style={{ textTransform: "uppercase" }}
                   value={formData.numeroOmbrello3}
@@ -300,10 +301,10 @@ const Booking = () => {
             <div className={styles.OmbrelloInputs}>
               <div className={styles.ombrelloGroup}>
                 <input
-                  type="number"
+                  type="text"
                   id="lettiOmbrello1"
-                  min="2"
-                  max="3"
+                  maxLength="1"
+                  pattern="[23]"
                   value={formData.lettiOmbrello1}
                   onChange={handleLettiChange}
                   placeholder="2-3"
@@ -311,10 +312,10 @@ const Booking = () => {
               </div>
               <div className={styles.ombrelloGroup}>
                 <input
-                  type="number"
+                  type="text"
                   id="lettiOmbrello2"
-                  min="2"
-                  max="3"
+                  maxLength="1"
+                  pattern="[23]"
                   value={formData.lettiOmbrello2}
                   onChange={handleLettiChange}
                   placeholder="2-3"
@@ -322,10 +323,10 @@ const Booking = () => {
               </div>
               <div className={styles.ombrelloGroup}>
                 <input
-                  type="number"
+                  type="text"
                   id="lettiOmbrello3"
-                  min="2"
-                  max="3"
+                  maxLength="1"
+                  pattern="[23]"
                   value={formData.lettiOmbrello3}
                   onChange={handleLettiChange}
                   placeholder="2-3"

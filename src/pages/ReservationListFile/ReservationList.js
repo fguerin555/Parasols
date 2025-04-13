@@ -29,13 +29,13 @@ const ReservationList = () => {
   }, []);
 
   const handleLettiChange = (reservationId, ombrelloNum, value) => {
-    const numValue = parseInt(value, 10);
-    if (numValue >= 2 && numValue <= 3) {
+    // Accepte uniquement les valeurs 2 ou 3
+    if (value === "" || value === "2" || value === "3") {
       setLettiPerOmbrello((prev) => ({
         ...prev,
         [reservationId]: {
           ...prev[reservationId],
-          [`ombrello${ombrelloNum}`]: numValue,
+          [`ombrello${ombrelloNum}`]: value,
         },
       }));
     }
@@ -78,9 +78,9 @@ const ReservationList = () => {
                 <div className={styles.ombrelloCell}>
                   <div>{reservation.numeroOmbrello1}</div>
                   <input
-                    type="number"
-                    min="2"
-                    max="3"
+                    type="text"
+                    maxLength="1"
+                    pattern="[23]"
                     className={styles.lettiInput}
                     value={lettiPerOmbrello[reservation.id]?.ombrello1 || ""}
                     onChange={(e) =>
@@ -94,9 +94,9 @@ const ReservationList = () => {
                 <div className={styles.ombrelloCell}>
                   <div>{reservation.numeroOmbrello2}</div>
                   <input
-                    type="number"
-                    min="2"
-                    max="3"
+                    type="text"
+                    maxLength="1"
+                    pattern="[23]"
                     className={styles.lettiInput}
                     value={lettiPerOmbrello[reservation.id]?.ombrello2 || ""}
                     onChange={(e) =>
@@ -110,9 +110,9 @@ const ReservationList = () => {
                 <div className={styles.ombrelloCell}>
                   <div>{reservation.numeroOmbrello3}</div>
                   <input
-                    type="number"
-                    min="2"
-                    max="3"
+                    type="text"
+                    maxLength="1"
+                    pattern="[23]"
                     className={styles.lettiInput}
                     value={lettiPerOmbrello[reservation.id]?.ombrello3 || ""}
                     onChange={(e) =>
