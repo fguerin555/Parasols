@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { db } from "../../Firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { generateSerialNumber } from "../../utils/bookingUtils";
 import "../../Global.css";
 import styles from "./Booking.module.css";
 
@@ -9,6 +10,31 @@ const capitalize = (str) => {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
+
+// Ajoutez cette fonction de vérification avant le composant Booking
+const checkParasolAvailability = async (numeroOmbrello, startDate, endDate) => {
+  if (!numeroOmbrello) return true;
+
+  const reservationsRef = collection(db, "reservations");
+  const q = query(
+    reservationsRef,
+    where("status", "==", "active"),
+    where("primoGiorno", "<=", endDate),
+    where("ultimoGiorno", ">=", startDate)
+  );
+
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.docs.some((doc) => {
+    const reservation = doc.data();
+    return [
+      reservation.numeroOmbrello1,
+      reservation.numeroOmbrello2,
+      reservation.numeroOmbrello3,
+    ].includes(numeroOmbrello);
+  });
+};
+
+// Ajoutez cette fonction pour générer le numéro de série
 
 const Booking = () => {
   // États pour les champs du formulaire
@@ -84,7 +110,7 @@ const Booking = () => {
   };
 
   // Après les autres fonctions de gestion
-  const handleOmbrelloChange = (e) => {
+  const handleOmbrelloChange = async (e) => {
     const { id, value } = e.target;
     const upperValue = value.toUpperCase();
 
@@ -94,17 +120,32 @@ const Booking = () => {
       return;
     }
 
+    // Vérification du format complet (ex: A1, B36)
+    const validFormat = /^[A-D]([1-9]|[1-2][0-9]|3[0-6])$/;
+    if (upperValue && validFormat.test(upperValue)) {
+      const isAvailable = await checkParasolAvailability(
+        upperValue,
+        formData.primoGiorno,
+        formData.ultimoGiorno
+      );
+
+      if (!isAvailable) {
+        alert(`Le parasol ${upperValue} est déjà réservé pour ces dates`);
+        return;
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       [id]: upperValue,
     }));
   };
 
-  // Remplacez la fonction handleLettiChange existante par celle-ci :
+  // Modifiez la fonction handleLettiChange
   const handleLettiChange = (e) => {
     const { id, value } = e.target;
 
-    // Accepte uniquement les valeurs 2 ou 3
+    // N'accepte que 2 ou 3
     if (value === "" || value === "2" || value === "3") {
       setFormData((prev) => ({
         ...prev,
@@ -113,61 +154,57 @@ const Booking = () => {
     }
   };
 
-  // Soumission du formulaire
+  // Modifiez la fonction handleSubmit pour s'assurer que le status est correctement défini
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Données à envoyer:", formData); // Ajoutez cette ligne
-
-    // Validation des champs obligatoires uniquement
-    if (
-      !formData.cognome ||
-      !formData.nome ||
-      !formData.primoGiorno ||
-      !formData.ultimoGiorno ||
-      !formData.timeday ||
-      !formData.numeroOmbrello1
-    ) {
-      alert(
-        "Veuillez remplir les champs obligatoires : Nom, Prénom, Dates, période (I/M/P) et au moins un numéro de parasol"
-      );
-      return;
-    }
 
     try {
-      const docRef = await addDoc(collection(db, "reservations"), {
-        cognome: formData.cognome,
-        nome: formData.nome,
-        primoGiorno: formData.primoGiorno,
-        ultimoGiorno: formData.ultimoGiorno,
-        timeday: formData.timeday,
-        numeroOmbrello1: formData.numeroOmbrello1,
-        numeroOmbrello2: formData.numeroOmbrello2 || null,
-        numeroOmbrello3: formData.numeroOmbrello3 || null,
-        lettiOmbrello1: formData.lettiOmbrello1,
-        lettiOmbrello2: formData.numeroOmbrello2
-          ? formData.lettiOmbrello2
-          : null,
-        lettiOmbrello3: formData.numeroOmbrello3
-          ? formData.lettiOmbrello3
-          : null,
-        // Champs optionnels
-        email: formData.email || null,
-        telefono: formData.telefono || null,
-        dateCreation: new Date(),
-        status: "active",
-      });
+      // Générer le numéro de série avant la validation
+      const serialNumber = await generateSerialNumber();
+      if (!serialNumber) {
+        alert("Erreur lors de la génération du numéro de série");
+        return;
+      }
 
-      console.log("Données envoyées avec succès. ID:", docRef.id); // Ajoutez cette ligne
+      // Validation des champs obligatoires
+      if (
+        !formData.cognome ||
+        !formData.nome ||
+        !formData.primoGiorno ||
+        !formData.ultimoGiorno ||
+        !formData.timeday ||
+        !formData.numeroOmbrello1
+      ) {
+        alert("Veuillez remplir les champs obligatoires");
+        return;
+      }
+
+      // Création du document avec tous les champs nécessaires
+      const reservationData = {
+        ...formData,
+        status: "active",
+        serialNumber: serialNumber,
+        dateCreation: new Date().toISOString(),
+      };
+
+      const docRef = await addDoc(
+        collection(db, "reservations"),
+        reservationData
+      );
+
+      console.log("Document créé avec l'ID:", docRef.id);
+      console.log("Données envoyées:", reservationData);
+
       alert("Réservation enregistrée avec succès!");
 
-      // Réinitialisation du formulaire
+      // Reset du formulaire
       setFormData({
         cognome: "",
         nome: "",
         email: "",
         telefono: "",
-        primoGiorno: new Date().toISOString().split("T")[0],
-        ultimoGiorno: new Date().toISOString().split("T")[0],
+        primoGiorno: "",
+        ultimoGiorno: "",
         timeday: "",
         numeroOmbrello1: "",
         numeroOmbrello2: "",
@@ -178,7 +215,7 @@ const Booking = () => {
       });
     } catch (error) {
       console.error("Erreur lors de la création:", error);
-      alert("Erreur lors de l'enregistrement de la réservation");
+      alert("Erreur lors de l'enregistrement");
     }
   };
 
@@ -307,7 +344,7 @@ const Booking = () => {
                   pattern="[23]"
                   value={formData.lettiOmbrello1}
                   onChange={handleLettiChange}
-                  placeholder="2-3"
+                  placeholder="2" // Changé de "2-3" à "2"
                 />
               </div>
               <div className={styles.ombrelloGroup}>
@@ -318,7 +355,7 @@ const Booking = () => {
                   pattern="[23]"
                   value={formData.lettiOmbrello2}
                   onChange={handleLettiChange}
-                  placeholder="2-3"
+                  placeholder="2" // Changé de "2-3" à "2"
                 />
               </div>
               <div className={styles.ombrelloGroup}>
@@ -329,7 +366,7 @@ const Booking = () => {
                   pattern="[23]"
                   value={formData.lettiOmbrello3}
                   onChange={handleLettiChange}
-                  placeholder="2-3"
+                  placeholder="2" // Changé de "2-3" à "2"
                 />
               </div>
             </div>

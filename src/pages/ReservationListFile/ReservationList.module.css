@@ -30,9 +30,8 @@
 
 .ombrelloCell {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
 }
 
 .lettiInput {
@@ -56,4 +55,26 @@
 th small {
   font-weight: normal;
   color: #666;
+}
+
+.emptyRow {
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
+
+.emptyRow td {
+  color: #999;
+  font-style: italic;
+}
+
+.clientInfo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.serialNumber {
+  color: #666;
+  font-size: 0.9em;
+  font-weight: 500;
 }
