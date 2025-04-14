@@ -146,13 +146,69 @@
   font-size: 12px;
 }
 
+/* Style pour les labels Lettini et Cabina */
 .lettiniTitle {
-  margin: 5px 0;
-  color: black;
-  font-size: 14px;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #333;
   font-family: "Montserrat-Medium", Arial, Helvetica, sans-serif;
+  font-size: 20px;
   text-align: center;
-  width: 100%;
+}
+
+/* Style pour les groupes d'inputs */
+.ombrelloGroup input[type="text"] {
+  width: 30px;
+  text-align: center;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.ombrelloGroup input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Style uniforme pour tous les inputs de type texte dans les groupes */
+.ombrelloGroup input[type="text"],
+.ombrelloGroup input[pattern="[23]"],
+.ombrelloGroup input[pattern="[01]"] {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 18px;
+  background-color: #f8f9fa;
+  font-family: monospace;
+}
+
+.ombrelloGroup input[type="text"]:focus,
+.ombrelloGroup input[pattern="[23]"]:focus,
+.ombrelloGroup input[pattern="[01]"]:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.ombrelloGroup input[type="text"]:hover,
+.ombrelloGroup input[pattern="[23]"]:hover,
+.ombrelloGroup input[pattern="[01]"]:hover {
+  background-color: #e9ecef;
+}
+
+/* Style spécifique pour les inputs numériques */
+.ombrelloGroup input[pattern="[23]"],
+.ombrelloGroup input[pattern="[01]"] {
+  background-color: #f8f9fa;
+  font-family: monospace;
+}
+
+.ombrelloGroup input[pattern="[23]"]:hover,
+.ombrelloGroup input[pattern="[01]"]:hover {
+  background-color: #e9ecef;
 }
 
 @media (max-width: 600px) {

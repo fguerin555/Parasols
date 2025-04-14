@@ -16,6 +16,7 @@
 .table td {
   padding: 12px;
   text-align: left;
+  font-family: "Montserrat-Regular", Arial, Helvetica, sans-serif;
   border-bottom: 1px solid #ddd;
 }
 
@@ -68,6 +69,7 @@ th small {
 }
 
 .clientInfo {
+  font-family: "Montserrat-Regular", Arial, Helvetica, sans-serif;
   display: flex;
   align-items: center;
   gap: 5px;
@@ -77,4 +79,9 @@ th small {
   color: #666;
   font-size: 0.9em;
   font-weight: 500;
+}
+
+.extraRow {
+  background-color: #f9f9f9;
+  font-style: italic;
 }
