@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { db } from "../../Firebase";
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
-import { generateSerialNumber } from "../../utils/bookingUtils";
+import { collection, addDoc, query, getDocs } from "firebase/firestore";
+import { generateSerialNumber } from "../../utils/bookingUtils/serialNumberGenerator";
 import {
   checkCabinaAvailability,
   getNextCabinaLetter,
@@ -9,119 +9,43 @@ import {
 import "../../Global.css";
 import styles from "./Booking.module.css";
 
-// Ajoutez cette fonction au début du composant pour capitaliser
-const capitalize = (str) => {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-};
-
-// Ajoutez cette fonction de vérification avant le composant Booking
-const checkParasolAvailability = async (numeroOmbrello, startDate, endDate) => {
-  if (!numeroOmbrello) return true;
-
-  const reservationsRef = collection(db, "reservations");
-  const q = query(reservationsRef, where("status", "==", "active"));
-
-  const querySnapshot = await getDocs(q);
-
-  // Vérification pour chaque réservation
-  for (const doc of querySnapshot.docs) {
-    const reservation = doc.data();
-
-    // Vérifie si les dates se chevauchent
-    if (
-      reservation.primoGiorno <= endDate &&
-      reservation.ultimoGiorno >= startDate
-    ) {
-      // Vérifie si le parasol est déjà utilisé dans cette réservation
-      const usedOmbrellos = [
-        reservation.numeroOmbrello1,
-        reservation.numeroOmbrello2,
-        reservation.numeroOmbrello3,
-      ].filter(Boolean); // Supprime les valeurs null/undefined/empty
-
-      // Compare les numéros de parasols en ignorant les espaces et la casse
-      if (
-        usedOmbrellos.some(
-          (usedOmbrello) =>
-            usedOmbrello.replace(/\s+/g, "").toUpperCase() ===
-            numeroOmbrello.replace(/\s+/g, "").toUpperCase()
-        )
-      ) {
-        return false; // Parasol déjà réservé
-      }
-    }
-  }
-
-  return true; // Parasol disponible
-};
-
-// Ajoutez cette fonction pour générer le numéro de série
-
 const Booking = () => {
-  // États pour les champs du formulaire
   const [formData, setFormData] = useState({
     cognome: "",
     nome: "",
     email: "",
     telefono: "",
-    primoGiorno: new Date().toISOString().split("T")[0],
-    ultimoGiorno: new Date().toISOString().split("T")[0],
+    primoGiorno: "",
+    ultimoGiorno: "",
     timeday: "",
-    numeroOmbrello1: "", // Vide par défaut
-    numeroOmbrello2: "", // Vide par défaut
-    numeroOmbrello3: "", // Vide par défaut
+    numeroOmbrello1: "",
+    numeroOmbrello2: "",
+    numeroOmbrello3: "",
     lettiOmbrello1: "2",
     lettiOmbrello2: "2",
     lettiOmbrello3: "2",
-    cabina1: "0", // Nouvelles propriétés
+    cabina1: "0",
     cabina2: "0",
     cabina3: "0",
   });
 
-  // Gestion des changements dans les inputs
   const handleChange = (e) => {
     const { id, value } = e.target;
 
-    // Gestion spéciale pour Cognome et Nome
-    if (id === "cognome" || id === "nome") {
-      setFormData((prev) => ({
-        ...prev,
-        [id]: capitalize(value),
-      }));
-      return;
+    // Transformer en majuscules pour nom et prénom
+    if (id === "nome" || id === "cognome") {
+      const capitalizedValue = value
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ");
+      setFormData({ ...formData, [id]: capitalizedValue });
+    } else {
+      setFormData({ ...formData, [id]: value });
     }
-
-    // Gestion spéciale pour les dates
-    if (id === "primoGiorno") {
-      setFormData((prev) => ({
-        ...prev,
-        primoGiorno: value,
-        ultimoGiorno: prev.ultimoGiorno < value ? value : prev.ultimoGiorno,
-      }));
-      return;
-    }
-
-    if (id === "ultimoGiorno") {
-      if (value < formData.primoGiorno) {
-        alert("La date de fin ne peut pas être antérieure à la date de début");
-        return;
-      }
-      setFormData((prev) => ({
-        ...prev,
-        ultimoGiorno: value,
-      }));
-      return;
-    }
-
-    // Gestion par défaut pour les autres champs
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }));
   };
 
-  // Gestion spéciale pour l'input I/M/P
   const handleInputChange = (e) => {
     const value = e.target.value.toUpperCase();
     if (!["I", "M", "P"].includes(value)) {
@@ -134,48 +58,8 @@ const Booking = () => {
     }));
   };
 
-  // Après les autres fonctions de gestion
-  const handleOmbrelloChange = async (e) => {
-    const { id, value } = e.target;
-    const upperValue = value.toUpperCase();
-
-    // Permet uniquement les caractères valides
-    const validChars = /^[A-D0-9]*$/;
-    if (!validChars.test(upperValue)) {
-      return;
-    }
-
-    // Vérification du format complet modifiée
-    if (upperValue) {
-      // Format: lettre A-D suivie d'un nombre de 1 à 36
-      const validFormat = /^[A-D]([1-9]|[12][0-9]|3[0-6])$/;
-
-      // Si la valeur est complète (format correct)
-      if (validFormat.test(upperValue)) {
-        const isAvailable = await checkParasolAvailability(
-          upperValue,
-          formData.primoGiorno,
-          formData.ultimoGiorno
-        );
-
-        if (!isAvailable) {
-          alert(`Le parasol ${upperValue} est déjà réservé pour ces dates`);
-          return;
-        }
-      }
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      [id]: upperValue,
-    }));
-  };
-
-  // Modifiez la fonction handleLettiChange
   const handleLettiChange = (e) => {
     const { id, value } = e.target;
-
-    // N'accepte que 2 ou 3
     if (value === "" || value === "2" || value === "3") {
       setFormData((prev) => ({
         ...prev,
@@ -184,36 +68,79 @@ const Booking = () => {
     }
   };
 
+  const checkParasolAvailability = async (
+    numeroOmbrello,
+    startDate,
+    endDate
+  ) => {
+    if (!numeroOmbrello || !startDate || !endDate) return true;
+
+    const prenotazioniRef = collection(db, "prenotazioni");
+    const q = query(prenotazioniRef);
+    const querySnapshot = await getDocs(q);
+
+    const checkStart = new Date(startDate);
+    const checkEnd = new Date(endDate);
+
+    for (const doc of querySnapshot.docs) {
+      const data = doc.data();
+      const reservationStart = new Date(data.primoGiorno);
+      const reservationEnd = new Date(data.ultimoGiorno);
+
+      // Vérifier si les dates se chevauchent
+      if (!(checkEnd < reservationStart || checkStart > reservationEnd)) {
+        // Comparaison exacte des numéros de parasol
+        if (data.numeroOmbrello === numeroOmbrello) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
+  const handleOmbrelloChange = async (e) => {
+    const { id, value } = e.target;
+    const upperValue = value.toUpperCase();
+
+    // Validation des caractères
+    const validChars = /^[A-D0-9]*$/;
+    if (!validChars.test(upperValue)) return;
+
+    // Toujours mettre à jour l'input visuellement
+    setFormData((prev) => ({
+      ...prev,
+      [id]: upperValue,
+    }));
+
+    // Si la valeur saisie n'est pas complète, on ne vérifie pas encore
+    const validFormat = /^[A-D]([1-9]|[12][0-9]|3[0-6])$/;
+    if (validFormat.test(upperValue)) {
+      const isAvailable = await checkParasolAvailability(
+        upperValue,
+        formData.primoGiorno,
+        formData.ultimoGiorno
+      );
+      if (!isAvailable) {
+        alert(`Le parasol ${upperValue} est déjà réservé pour ces dates`);
+        // Vider le champ si réservé
+        setFormData((prev) => ({
+          ...prev,
+          [id]: "",
+        }));
+      }
+    }
+  };
+
   const handleCabinaChange = async (e) => {
     const { id, value } = e.target;
-
-    // N'accepte que 0 ou 1 ou champ vide
     if (value === "" || value === "0" || value === "1") {
-      // Si on veut attribuer une cabine (value === "1")
       if (value === "1") {
-        // Vérifier la disponibilité des cabines pour la date donnée
         const isAvailable = await checkCabinaAvailability(formData.primoGiorno);
-
         if (!isAvailable) {
           alert("Désolé, toutes les cabines sont occupées pour cette date");
           return;
         }
-
-        // Vérifier si un numéro de parasol correspondant est saisi
-        const ombrelloNum =
-          id === "cabina1"
-            ? formData.numeroOmbrello1
-            : id === "cabina2"
-            ? formData.numeroOmbrello2
-            : formData.numeroOmbrello3;
-
-        if (!ombrelloNum) {
-          alert("Veuillez d'abord saisir le numéro de parasol correspondant");
-          return;
-        }
       }
-
-      // Mettre à jour le state si toutes les vérifications sont passées
       setFormData((prev) => ({
         ...prev,
         [id]: value,
@@ -221,37 +148,35 @@ const Booking = () => {
     }
   };
 
-  // Modifiez la fonction handleSubmit pour s'assurer que le status est correctement défini
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const serialNumber = await generateSerialNumber();
-      if (!serialNumber) {
-        alert("Erreur lors de la génération du numéro de série");
+      // Vérification des doublons
+      const parasols = [
+        formData.numeroOmbrello1,
+        formData.numeroOmbrello2,
+        formData.numeroOmbrello3,
+      ].filter(Boolean);
+
+      const duplicates = parasols.filter(
+        (item, index) => parasols.indexOf(item) !== index
+      );
+      if (duplicates.length > 0) {
+        alert(
+          `Erreur : Le parasol ${duplicates[0]} est sélectionné plusieurs fois`
+        );
         return;
       }
 
-      // Validation des champs obligatoires
-      if (
-        !formData.cognome ||
-        !formData.nome ||
-        !formData.primoGiorno ||
-        !formData.ultimoGiorno ||
-        !formData.timeday ||
-        !formData.numeroOmbrello1
-      ) {
-        alert("Veuillez remplir les champs obligatoires");
-        return;
-      }
-
-      // Gestion des cabines avec un Set pour suivre les lettres déjà attribuées
       const usedLetters = new Set();
-      let cabinaResults = {
+      const cabinaResults = {
+        // Initialiser avec des valeurs par défaut
         cabinaLetter1: null,
         cabinaLetter2: null,
         cabinaLetter3: null,
       };
+
+      const serialNumber = await generateSerialNumber();
 
       // Fonction pour obtenir la prochaine lettre en tenant compte des lettres déjà utilisées
       const getNextAvailableLetter = async (date) => {
@@ -290,9 +215,9 @@ const Booking = () => {
       // Création du document avec les lettres de cabine
       const reservationData = {
         ...formData,
-        cabinaLetter1: cabinaResults.cabinaLetter1,
-        cabinaLetter2: cabinaResults.cabinaLetter2,
-        cabinaLetter3: cabinaResults.cabinaLetter3,
+        cabinaLetter1: cabinaResults.cabinaLetter1 || "-",
+        cabinaLetter2: cabinaResults.cabinaLetter2 || "-",
+        cabinaLetter3: cabinaResults.cabinaLetter3 || "-",
         status: "active",
         serialNumber: serialNumber,
         dateCreation: new Date().toISOString(),

@@ -87,31 +87,38 @@ const ReservationList = () => {
         };
       });
 
-      // Créer le tableau d'affichage avec les lignes supplémentaires
+      // Modification du tri des parasols
       const displayRows = [];
       updatedParasols.forEach((parasol) => {
-        if (parasol.reservation?.timeday === "P") {
-          // Pour l'après-midi, ajouter d'abord la ligne vide
-          displayRows.push({
-            ...parasol,
-            numero: parasol.numero,
-            reservation: null,
-            isExtra: true,
-          });
+        const existingReservations = reservationsData.filter(
+          (res) =>
+            res.numeroOmbrello1 === parasol.numero ||
+            res.numeroOmbrello2 === parasol.numero ||
+            res.numeroOmbrello3 === parasol.numero
+        );
+
+        if (existingReservations.length === 0) {
+          // Pas de réservation
           displayRows.push(parasol);
-        } else if (parasol.reservation?.timeday === "M") {
-          // Pour le matin, ajouter d'abord la réservation
-          displayRows.push(parasol);
-          displayRows.push({
-            ...parasol,
-            numero: parasol.numero,
-            reservation: null,
-            isExtra: true,
-          });
         } else {
-          // Pour les journées complètes ou pas de réservation
-          displayRows.push(parasol);
+          // Ajouter une ligne pour chaque réservation
+          existingReservations.forEach((reservation) => {
+            displayRows.push({
+              ...parasol,
+              reservation: reservation,
+            });
+          });
         }
+      });
+
+      // Tri des parasols par section (A, B, C, D) puis par numéro
+      displayRows.sort((a, b) => {
+        const [letterA, numA] = a.numero.match(/([A-D])(\d+)/).slice(1);
+        const [letterB, numB] = b.numero.match(/([A-D])(\d+)/).slice(1);
+        if (letterA === letterB) {
+          return parseInt(numA) - parseInt(numB);
+        }
+        return letterA.localeCompare(letterB);
       });
 
       setDisplayParasols(displayRows);
