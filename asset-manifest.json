@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Parasols/static/css/main.e5e432e6.css",
-    "main.js": "/Parasols/static/js/main.5de5e030.js",
+    "main.js": "/Parasols/static/js/main.74c0aadd.js",
     "static/media/Montserrat-LightItalic.ttf": "/Parasols/static/media/Montserrat-LightItalic.ac3843da62f0afac7929.ttf",
     "static/media/Montserrat-MediumItalic.ttf": "/Parasols/static/media/Montserrat-MediumItalic.67e6dda3939a21720991.ttf",
     "static/media/Montserrat-ExtraLightItalic.ttf": "/Parasols/static/media/Montserrat-ExtraLightItalic.8df5777e3ea85687bdf0.ttf",
@@ -15,10 +15,10 @@
     "static/media/JosefinSans-Medium.ttf": "/Parasols/static/media/JosefinSans-Medium.45a5738c27c1bbbecc0c.ttf",
     "index.html": "/Parasols/index.html",
     "main.e5e432e6.css.map": "/Parasols/static/css/main.e5e432e6.css.map",
-    "main.5de5e030.js.map": "/Parasols/static/js/main.5de5e030.js.map"
+    "main.74c0aadd.js.map": "/Parasols/static/js/main.74c0aadd.js.map"
   },
   "entrypoints": [
     "static/css/main.e5e432e6.css",
-    "static/js/main.5de5e030.js"
+    "static/js/main.74c0aadd.js"
   ]
 }
